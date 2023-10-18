@@ -1,0 +1,515 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+
+{{!
+    @template mod_debatechat/view
+
+    Moodle renders a simple view page
+
+    Classes required for JS:
+    * none
+
+    Data attributes required for JS:
+    * none
+
+    Context variables required for this template:
+    * title String a page title.
+    * body String of html code the formatted module intro.
+    * message - a welocme message
+
+    Example context (json):
+        {
+         "title": "My heading",
+         "body": "<p>My html body</p>",
+         "message": "Hello there"
+        }
+}}
+<!--<div class="card">
+    <div class="card-body">
+        <h2 class="card-title">{{title}}</h2>
+        {{{body}}}
+    </div>
+    <p>{{message}}</p>
+</div>-->
+<div class="card">
+ <div class="message-list flex-item message-list-no-input">
+      <div id="chatContent">
+          <div class="message flex-item flex-item-align-left">
+            <p>Hi there. I'm the Debate {{title}} Bot. I've been trained to help you find {{title}}. </p>
+          </div>
+       </div>
+	    <div class="flex-item flex-item-align-right flex flex-cols flex-justify-items-right flex-wrap"
+            style="max-width: 100%;">
+            <div class="message-wrapper flex flex-rows">
+              <div class="flex-item flex flex-rows">
+                <div class="message flex-item flex-item-align-left">
+                  <p>Please Start your Debate here !</p>
+                </div>
+                <div class="flex-item flex-item-align-right flex flex-cols flex-justify-items-right flex-wrap"
+                  style="max-width: 100%;">
+                  <div class="user-input-container" id="containner">
+                    <input type="text" id="userInput" class="form-control" placeholder="Type your message here..." />
+					  
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+            </div>
+          </div>
+      </div>
+    </div>
+</div>
+
+{{#js}}
+  M.util.js_pending('theme_boost/loader');
+  require(['theme_boost/loader'], function () {
+    M.util.js_complete('theme_boost/loader');
+  });
+
+  
+   $(document).ready(function() {
+   var courseval = '227';
+   let conversation = '';
+    let messagecontent = '';
+    let messageElement = '';
+    window.console.log('Hello, world!');	
+	$(document).on('keypress', function(e) {
+      if (e.which == 13) {
+       botReply();
+      }
+    });	
+	
+	
+
+
+	function appendMessage(sender, message) {
+      
+      var messageElement = document.createElement("div");
+      messageElement.classList.add("mt-2");
+      if (sender === "user") {
+        messageElement.innerHTML = '<div class="user-message"> ' + message + '</div>';
+      } else {
+        messageElement.innerHTML = '<div id="bot-msg" class="bot-message message flex-item flex-item-align-left"><img src="https://latest.lms.svhs.co/reports/admin/api/chat-bot.jpg" "width=30px" height="30px" />' + message + '</div>';
+      }      
+    }
+	function botReply(question) {
+      document.getElementById("userInput").placeholder = "Bot is typing..."
+      if (courseval == '') {
+        courseval = localStorage.getItem('course')
+      }
+      if (conversation == '') {
+        conversation = localStorage.getItem('conversation')
+      }
+      setTimeout(function () {
+        let userInput = question?question:document.getElementById("userInput").value
+        appendMessage("user", userInput);
+        // conversation += userInput + '';
+        const data = { 'input': userInput, 'course': courseval, 'bot_type': 'tutor' }
+        fetch('https://aiapi.svhs.co/svhs-ai/chat-bot-query/', {
+		  mode: 'no-cors',
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data),
+        })
+          .then(response => response.json())
+          .then((result) => {
+            let button = "";
+            document.getElementById("userInput").placeholder = "Type your message here..."
+            require(['https://cdn.jsdelivr.net/npm/marked@2.0.3/marked.min.js'], function (marked) {
+              let normalText = marked(result.answer)
+              appendMessage("bot", normalText)
+              let followUpQuestions = result.follow_up_questions
+              for( var index in followUpQuestions)
+              { 
+                  var item = followUpQuestions[index]; 
+                  button += '<button id="' + item + '" style="display: block; text-align: right; background-color: #009eff; color: white; border-radius: 20px; border: None; padding: 20px;" class="follow-button" onclick="handleFollowButtonClick(\'' + item + '\')">' + item + '</button>';
+              }
+              document.getElementById("mycourses").innerHTML += button
+              // conversation += normalText + '';
+              historySaving()
+            });
+          });
+
+        document.getElementById("userInput").value = "";
+
+        // Automatically scroll to the last message
+        chatContent.scrollTop = chatContent.scrollHeight;
+      }, 1000);
+    }
+
+});
+
+	
+
+	
+
+	
+
+{{/js}}
+<style>
+    #chatbox {
+      position: fixed;
+      bottom: 0px;
+      right: 20px;
+      width: 450px;
+      top: 10px;
+      background-color: #f1f1f1;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      overflow: hidden;
+    }
+
+
+    #chatbox .head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      background-color: #3165ae;
+      color: #fff;
+      border-top-left-radius: 5px;
+      border-top-right-radius: 5px;
+      padding: 8px 10px;
+    }
+
+    #toggleButton {
+      font-size: 18px;
+    }
+
+    #chatContent {
+      height: 100%;
+      /* Adjust this value as needed */
+      overflow-y: auto;
+      padding: 10px;
+    }
+
+    .user-input-container {
+
+      margin: 10px;
+      position: relative;
+      /* Added to make "Bot is typing..." message absolute */
+    }
+
+    #userInput {
+      width: 100%;
+      padding: 5px 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    < !--.collapsed #userInput {
+      display: none;
+    }
+
+    -->.typing-message {
+      text-align: center;
+      font-style: italic;
+    }
+
+    .user-message {
+      float: right !important;
+      text-align: right;
+      color: #fff;
+      animation: 300ms 1 forwards slideUpAndRight cubic-bezier(0.4, 0, 0.2, 1), 300ms 1 forwards fadeIn cubic-bezier(0.4, 0, 0.2, 1);
+      background: #009eff;
+      border: none 0;
+      border-radius: 10px;
+      display: inline-block;
+      margin-bottom: 1rem;
+      outline: none;
+      padding: 0.5rem 1rem;
+      position: relative;
+      word-wrap: break-word;
+      max-width: 100%;
+      box-shadow: 1px 1px 2px 0 #d9d9d9;
+    }
+
+    .bot-message {
+      text-align: left;
+      margin-right: 100px;
+    }
+
+    .btn {
+      margin-left: 170px;
+    }
+
+    .message-list.message-list-no-input {
+      height: calc(100% - 40px);
+    }
+
+    .flex>.flex-item {
+      flex-grow: 0;
+      flex-shrink: 0;
+      flex-basis: auto;
+      min-width: initial;
+      min-width: calc(0%);
+    }
+
+    .message-list {
+      height: calc(100% - 60px);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .head {
+      height: 46px;
+      border-bottom-style: solid;
+      border-bottom-width: 1px;
+      padding: 0 1rem;
+      background: linear-gradient(#eff0f9, #fcfcff);
+      border-bottom-color: #c1c0da;
+    }
+
+    .flex>.flex-item.flex-item-space-right {
+      margin-right: 1rem;
+    }
+
+    .head .img {
+      background-color: #eff0f9;
+      box-shadow: 1px 1px 2px 0 #222335;
+      background-position: center center;
+      background-repeat: no-repeat;
+      background-size: cover;
+    }
+
+    .head img,
+    .head .img {
+      border-radius: 50%;
+      height: 50px;
+      position: relative;
+      width: 50px;
+      z-index: 1;
+    }
+
+    .flex.flex-cols {
+      flex-direction: row;
+      min-height: initial;
+      min-height: calc(0%);
+    }
+
+    .truncate {
+      color: #000;
+      display: block;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .message.my-message {
+      background: #009eff;
+      color: #fff;
+    }
+
+    .button.message.clickable {
+      background: transparent;
+      border: none 0;
+      box-shadow: 0 0 0 1px #009eff;
+      color: #009eff;
+      padding-bottom: 0.375rem;
+      padding-top: 0.375rem;
+      text-align: left;
+      transition: box-shadow 200ms ease-in;
+      white-space: normal;
+      float: right;
+    }
+
+    .message.clickable {
+      cursor: pointer;
+    }
+
+    .message.message-kinda-tight {
+      margin-bottom: 0.5rem;
+    }
+
+    .message.my-message {
+      text-align: right;
+      float: right;
+      animation: 300ms 1 forwards slideUpAndRight cubic-bezier(0.4, 0, 0.2, 1), 300ms 1 forwards fadeIn cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .message {
+      background: #fff;
+      border: none 0;
+      border-radius: 20px;
+      display: inline-block;
+      margin-bottom: 1rem;
+      outline: none;
+      padding: 0.5rem 1rem;
+      position: relative;
+      word-wrap: break-word;
+      max-width: 100%;
+      box-shadow: 1px 1px 2px 0 #d9d9d9;
+    }
+
+    .button {
+      float: right;
+      font-size: 1rem;
+      font-weight: 400;
+      height: auto;
+      border-radius 4px;
+      text-decoration: none;
+      white-space: nowrap;
+      letter-spacing: 0.02rem;
+    }
+
+    .mycoursebutton {
+      message message-kinda-tight my-message clickable flex-item flex-item-kinda-space-left
+    }
+
+    #pop {
+      position: fixed;
+      bottom: 20px;
+      right: 40px;
+      font-family: 'Source Sans Pro', sans-serif !important;
+      background-color: white;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      overflow: hidden;
+    }
+
+    #pop-img {
+      margin-top: 5%;
+    }
+
+    .material-icons {
+      margin-left: 240px;
+      margin-top: 3%;
+      margin-right: 10px;
+      color: blue;
+    }
+
+    .click-font {
+      font-size: 15px;
+      padding-left: 6px;
+      font-weight: bold;
+    }
+
+    .head img {
+      border-radius: 50%;
+      margin-right: auto;
+    }
+
+    .fa-close {
+      color: blue;
+      font-size: 35px;
+    }
+    .fa-refresh{
+      color: blue;
+      font-size: 20px;
+      margin-left: 7%;
+    }
+
+    .mck-agent-image-container .mck-agent-status-indicator {
+      position: absolute;
+      bottom: -3px;
+      right: 0;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      border: solid 2.5px #5553b7;
+      background-color: #2bef84;
+    }
+
+    .refresh-icon {
+      width: 20px;
+      height: 20px;
+      left: 40px;
+      border: 5px solid blue;
+      border-radius: 50%;
+      position: relative;
+    }
+
+    .refresh-icon::before {
+      content: "";
+      width: 10px;
+      height: 10px;
+      border-top: 5px solid blue;
+      border-right: 5px solid blue;
+      transform: rotate(45deg);
+      position: absolute;
+      top: -7.5px;
+      right: -7.5px;
+    }
+
+    .refresh-icon:hover {
+      animation: rotate 1s linear infinite;
+    }
+
+    #bot-msg h1 {
+      font-size: 18px !important;
+    }
+
+    #bot-msg h2 {
+      font-size: 18px !important;
+    }
+
+    #bot-msg h3 {
+      font-size: 18px !important;
+    }
+    .fa-remove:before, .fa-close:before, .fa-times:before {
+    content: None !important;
+}
+    .follow-button{
+      margin-bottom: 0.5rem;
+      flex-grow: 0;
+      flex-shrink: 0;
+      flex-basis: auto;
+      min-width: initial;
+      min-width: calc(0%);
+    }
+
+.dropdown-bot {
+  position: relative;
+  display: inline-block;
+  margin-left: 20%;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f1f1f1;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+.dropdown-content span {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+.dropdown-content span:hover {background-color: #ddd;}
+
+.show {
+  display:block;
+  margin-left: -190%;
+}
+    @keyframes rotate {
+      from {
+        transform: rotate(0deg);
+      }
+
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+</style>
