@@ -39,11 +39,17 @@ class view implements renderable, templatable {
      * @return stdClass
      */
     public function export_for_template(renderer_base $output) {
-
+		global $COURSE,$USER;
         $data = new stdClass();
 
+        $data->intro = strip_tags($this->debatechat->intro);
         $data->title = $this->debatechat->title;
         $data->prompt = $this->debatechat->prompt;
+        $data->courseid = $this->debatechat->course;
+        $data->fullname = $COURSE->fullname;
+        $data->userid = $USER->id;
+        $data->username = fullname($USER);
+        $data->debatechatid = $this->id;
         // Moodle handles processing of std intro field.
         $data->body = format_module_intro('debatechat',
                 $this->debatechat, $this->id);

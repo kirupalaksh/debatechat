@@ -35,481 +35,907 @@
         {
          "title": "My heading",
          "body": "<p>My html body</p>",
-         "message": "Hello there"
+         "message": "Hello there",
+		 "courseid" : "321",
+		 "username" : "name"
         }
 }}
-<!--<div class="card">
-    <div class="card-body">
-        <h2 class="card-title">{{title}}</h2>
-        {{{body}}}
+
+<div class="debate-bot container">
+    <div class="row">
+        <div class="col-12">
+            <div class="row debate-bot-wrapper">
+                <div class="col-12 col-lg-8">
+                    <div class="white-block">
+                        <li class="d-flex gap-3 sender-text dot">
+                            <div class="profile-circle-dot"></div>
+                            <p style="margin-left:20px;"><span>Dot</span> {{intro}} <br/> The topic of debate is: <b>{{title}} </b>
+							 <span id="keycon" style="font-size: 16px;"> Key Concepts to discuss are:  </span> 	
+							</p>							
+                        </li>
+						<!-- <ul class="ps-0 chat-wrapper">
+							<div id="mycourses" > </div>     
+						</ul>-->
+						<ul class="ps-0 chat-wrapper" id="mycourses" >
+							
+						</ul>
+					<input type="hidden" id="m-topicid" value="{{title}}" />
+					<input type="hidden" id="m-intro" value="{{intro}}" />
+					<input type="hidden" id="m-courseid" value="{{courseid}}" />
+					<input type="hidden" id="m-fullname" value="{{fullname}}" />
+					<input type="hidden" id="m-userid" value="{{userid}}" />
+					<input type="hidden" id="m-debatechatid" value="{{debatechatid}}" />
+					<input type="hidden" id="m-firstname" value="{{username}}" />
+					<div class="typing" style="display:none;color:green;text-align: center;">Bot is Typing ..</div>
+					<button class="stop-btn" id="stopchatt" style="text-align: center;width:750px;margin-bottom:20px;">Stop Chat</button>	
+						
+                        
+                    </div>
+                    <div class="white-block mt-4" id="textdiv" >
+                        <div class="input-group">
+                          <!--  <input type="text" id="debateinput"  class="form-control" placeholder="Type something" oncopy="return false" onpaste="return false" /> -->
+						  <input type="text" id="debateinput"  class="form-control" placeholder="Type something"  />
+						  
+                            <button id="Send" class="btn btn-link" type="button" id="button-addon2" disabled >
+                                <img src="images/share.svg" alt="send" />
+                            </button>
+                        </div>
+                    </div>
+					<button id="Resettt" class="btn btn-link" type="button" style="display:None;text-align: center;width: 20px; margin-top: 20px;margin-left: 350px;" ><img src="images/Reseticon.png" alt="reset" /></button>
+					</div>
+                <div class="col-12 col-lg-4 mt-3 mt-lg-0">
+                    <div class="white-block">
+						
+						<div class="outer" style="width: 100%;height: 280px;background: #fff;box-shadow: #efe9e9 1px 1px 1px;">
+						<canvas id="chartJSContainer" width="400" height="200"></canvas>
+						<canvas id="secondContainer" width="400" height="200"></canvas>			
+							
+						<p class="percent" style="display: none;">	
+						  <span id="scoreneedle">0</span>/<span>100</span>			 
+						</p>	
+						<p class="legend1" style="display: none;">F</p>
+						<p class="legend2" style="display: none;">D</p>
+						<p class="legend3" style="display: none;">C</p>	
+						<p class="legend4" style="display: none;">B</p>	
+						<p class="legend5" style="display: none;">A</p>	
+						<p class="estimate">Estimated Grade </p>	
+						</div>							
+					</div>
+					<div id="gradingdiv" style="display:None;">
+						 <div class="box boxaligncenter submissionsummarytable">
+						 <div class="table-responsive">
+						 <table class="generaltable table-bordered">
+							<tbody>
+							<tr class="">
+							<th class="cell c0" style="" scope="row">Submission status</th>
+							<td class="submissionstatussubmitted cell c1 lastcol" id="submissionstatus"></td>
+							</tr>
+							<tr class="" id="divgradestatus">
+							<th class="cell c0" style="" scope="row" >Grading status</th>
+							<td class="submissiongraded cell c1 lastcol" style="" id="gradestatus"></td>
+							</tr>
+							</tbody>
+							</table>
+							</div></div>
+					</div>	
+					</div>
+					
+                </div>
+            </div>
+        </div>
     </div>
-    <p>{{message}}</p>
-</div>-->
-<div class="card">
- <div class="message-list flex-item message-list-no-input">
-      <div id="chatContent">
-          <div class="message flex-item flex-item-align-left">
-            <p>Hi there. I'm the Debate {{title}} Bot. I've been trained to help you find {{title}}. </p>
-          </div>
-       </div>
-	    <div class="flex-item flex-item-align-right flex flex-cols flex-justify-items-right flex-wrap"
-            style="max-width: 100%;">
-            <div class="message-wrapper flex flex-rows">
-              <div class="flex-item flex flex-rows">
-                <div class="message flex-item flex-item-align-left">
-                  <p>Please Start your Debate here !</p>
-                </div>
-                <div class="flex-item flex-item-align-right flex flex-cols flex-justify-items-right flex-wrap"
-                  style="max-width: 100%;">
-                  <div class="user-input-container" id="containner">
-                    <input type="text" id="userInput" class="form-control" placeholder="Type your message here..." />
-					  
-                  </div>
-                </div>
-              </div>
+  
+
+<div class="modal" id="myModal" data-modal="modalmyModal" >
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel"><span style="margin-left: 175px"><img src="https://stage2.lms.svhs.co/mod/historicalfigure/templates/Dot.png"" width="75px" ></span></h4>
+           			
+				<button type="button" class="close" data-dismiss="modal" data-action="hide" aria-label="Close" id="close-modal">
+                    <i class="fa fa-times-circle-o" aria-hidden="true"></i>
+                </button>
             </div>
-          </div>
+			
+            <div class="modal-body1">
+              
             </div>
-          </div>
-      </div>
+			 <div class="modal-footer">
+			 <button type="button" class="btn btn-default" id="getconclude">Yes</button>
+             <button type="button" class="btn btn-default" data-dismiss="modal" >No, I want to Continue</button>
+            </div>
+           
+        </div>
     </div>
 </div>
 
-{{#js}}
-  M.util.js_pending('theme_boost/loader');
-  require(['theme_boost/loader'], function () {
-    M.util.js_complete('theme_boost/loader');
-  });
+<div class="modal" id="myModal2" data-modal="modalmyModal" >
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel"><span style="margin-left: 175px"><img src="https://stage2.lms.svhs.co/mod/historicalfigure/templates/Dot.png"" width="75px" ></span></h4>
+           			
+				<button type="button" class="close" data-dismiss="modal" data-action="hide" aria-label="Close" id="close-modal">
+                    <i class="fa fa-times-circle-o" aria-hidden="true"></i>
+                </button>
+            </div>
+			
+            <div class="modal-body2">
+              
+            </div>
+			 <div class="modal-footer">
+			 <button type="button" class="btn btn-default" id="getreset">Confirm</button>
+             <button type="button" class="btn btn-default" data-dismiss="modal" >Cancel</button>
+            </div>
+           
+        </div>
+    </div>
+</div>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+    html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    font-family: Roboto;
+}
+    .debate-bot.container{
+         max-width: 1389px;  
+		font-family: Roboto;		
+    }
+    .debate-bot .title{
+        font-family: Roboto;
+        font-size: 22px;
+        font-weight: 500;
+        line-height: 25.78px;
+        text-align: left;
+         margin-bottom: 24px;
+    }
+    .debate-bot-wrapper{
+        background: #F7F7FB;
+        max-width: 1389px;
+        padding: 40px;
+        border-radius: 8px;
+        margin-bottom: 30px;
+    }
+    .debate-bot-wrapper .white-block{
+        border: 1px solid #DDDDDD;
+        border-radius: 8px;
+        background-color: #fff;
+        padding: 32px;
+    }
+    .debate-bot-wrapper .profile-circle-dot{
+        width: 50px;
+        height: 50px;
+        background-color: #eee;
+        background-image: url('https://stage2.lms.svhs.co/mod/historicalfigure/templates/Dot.png');
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: cover;
+        border-radius: 50%;
+        flex-shrink: 0;
+    }
+	.debate-bot-wrapper .profile-circle-user{
+        width: 50px;
+        height: 50px;
+        background-color: #eee;
+        background-image: url('https://stage2.lms.svhs.co/mod/debatechat/images/avatar3.png');
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: cover;
+        border-radius: 50%;
+        flex-shrink: 0;
+    }
+    .white-block .sender-text span,.white-block .receiver-text span{
+      display: block;
+      font-family: Roboto;
+     font-size: 20px;
+    font-weight: 500;
+    line-height: 28px;
+    text-align: left;
+      margin-bottom: 0;
+    }
 
+    .white-block .sender-text.dot {
+        color: #2E65AE;
+        font-family: Roboto;
+        font-size: 16px;
+        font-weight: 400;
+        line-height: 22.4px;
+        text-align: left;
+    }
+    .white-block .receiver-text.user{
+        font-family: Roboto;
+        font-size: 16px;
+        font-weight: 400;
+        line-height: 22.4px;
+        text-align: left;
+        color: #000;
+    }
+    .debate-bot-wrapper .input-group .form-control {
+        border: none; 
+        background-color: transparent;
+        font-family: Roboto;
+        font-size: 15px;
+        font-weight: 400;
+        line-height: 20.25px;
+        color: #737376;
+    }
+    .debate-bot-wrapper .white-block .input-group .form-control:focus{
+         box-shadow: none;
+    }
+    .debate-bot-wrapper .white-block{
+        border: 1px solid #DDDDDD;
+        border-radius: 8px;
+        background-color: #fff;
+        padding:42px 32px;
+    }
+    .debate-bot-wrapper.chat-body .white-block .btn{
+        border: none;
+        background-color: transparent;
+    }
+    .debate-bot-wrapper .receiver-text, .debate-bot-wrapper .sender-text{
+        margin-bottom: 30px;
+    }
+    .debate-bot-wrapper .receiver-text p, .debate-bot-wrapper .sender-text p{
+        max-width: 600px;
+    }
+    .debate-bot-wrapper .input-group .form-control{
+        font-family: Roboto;
+        font-size: 13px;
+        font-weight: 400;
+        line-height: 15.6px;
+        text-align: left;
+    }
+     .debate-bot .chat-wrapper{
+        max-height: 400px;
+        overflow-y: auto;
+    }
+     /* width */
+     ::-webkit-scrollbar {
+    width: 5px;
+    }
+
+    /* Track */
+    ::-webkit-scrollbar-track {
+    background: transparent; 
+    }
+    
+    /* Handle */
+    ::-webkit-scrollbar-thumb {
+    background:#a5a5a57d; 
+    }
+
+    /* Handle on hover */
+    ::-webkit-scrollbar-thumb:hover {
+    background: #a5a5a57d; 
+    }
+.typing { align:center;} 	
+#chartJSContainer {
+  margin-top: 50px;
+    padding: 10px 28px;
+    
+}
+#secondContainer {
+  margin-top: 40px
+}
+   .outer {
+  position: relative;
+  width: 600px;
+  height: 400px;
   
-   $(document).ready(function() {
-   var courseval = '227';
-   let conversation = '';
-    let messagecontent = '';
-    let messageElement = '';
-    window.console.log('Hello, world!');	
-	$(document).on('keypress', function(e) {
-      if (e.which == 13) {
-       botReply();
-      }
-    });	
+}
+canvas {
+  position: absolute;
+}
+.percent {
+ position: absolute;
+    left: 50%;
+    transform: translate(-50%, 0);
+    font-size: 1.2rem;
+    bottom: 15%;
+
+    }
+.legend1 {
+ position: absolute;
+    left: 5%;
+    transform: translate(-50%, 0);
+    font-size: 1.2rem;
+    bottom: 26%;
+	font-weight: bold;
+    }
+.legend2 {
+ position: absolute;
+  left: 14%;
+  transform: translate(-50%, 0);
+  font-size: 1.2rem;
+  bottom: 59%;
+  font-weight: bold;
+    }
+.legend3 {
+ position: absolute;
+  left: 50%;
+  transform: translate(-50%, 0);
+  font-size: 1.2rem;
+  bottom: 76%;
+  font-weight: bold;
+    }
+.legend4 {
+ position: absolute;
+  left: 86%;
+  transform: translate(-50%, 0);
+  font-size: 1.2rem;
+  bottom: 61%;
+  font-weight: bold;
+    }
+.legend5 {
+ position: absolute;
+  left: 96%;
+  transform: translate(-50%, 0);
+  font-size: 1.2rem;
+  bottom: 25%;
+  font-weight: bold;
+    }
+.estimate {
+  bottom: 0px;
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, 0);
+  font-size: 1.2rem;
+  font-weight: bold;
+  font-family: Roboto;
+  }
+  .completion-info { display :none; }
+  .activity-header { display :none; }
+  .stop-btn {
+  background-color: #629cd1;
+    background-size: 100% 200%;
+    box-shadow: 0 0 0 0 rgba(0, 0, 0, .5) inset;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    font-family: Roboto;
+    padding: .4rem 1rem;
+    text-shadow: none;
+	}
+#Resettt.btn:focus, #Resettt.btn:active {
+    outline: none;
+	box-shadow: None;
+}
+ </style>
+<script src='amd/src/chart.js'></script>
+{{#js}}
+$(document).ready(function() { 
+
+ let keysobjects = '';	
+  const activityid = $('#m-debatechatid').val();
+  const topic = $("#m-topicid").val();
+  var courseid = $("#m-courseid").val();
+  var coursefullname = $("#m-fullname").val();	
+  var input_student = $("#m-userid").val();  
+  var rubrics;
+  var concludeval,grade,gradestatus;
+  let globalnewrubrics;
+  let estimatedgrade;
+  var data_post;
+  let firstchat;
+	$("#stopchatt").hide();
+	$("#Resettt").css("visibility", "hidden");
+let score = 0; 
+  let input_val = '';
+
+   if(input_val == ''){
+	checkuserexists1(input_student,activityid);	 	    
+   }
+ 
+   $.ajax({
+    url: 'getconclusion.php', 
+    data: { activity_id:activityid, student_id : input_student }, 
+    type: 'GET',
+    success: function(res) { 		
+		const jsonres = JSON.parse(res);
+	    concludeval = jsonres[0].concluded;
+		gradestatus = jsonres[0].grade.gradestatus;	
+		   if(concludeval === '1'){
+				$("#gradingdiv").show();
+				$("#stopchatt").prop("disabled", true);
+				const stopchatt = document.querySelector('#stopchatt');
+				stopchatt.style.color = 'black';
+				stopchatt.style.backgroundColor = '#b6bec5';
+				$("#textdiv").hide(); 
+				$("#Resettt").css("visibility", "hidden");	
+				$("#submissionstatus").text('Submitted for Grading');
+				$("#submissionstatus").css("background-color", "#cfefcf");
+				$("#gradestatus").text(gradestatus);
+				if(gradestatus==='Graded') {	
+				$("#gradestatus").css("background-color", "#cfefcf");					
+				}								
+			} else {
+				$("#gradingdiv").show();
+				$("#submissionstatus").text('Not yet Submitted');
+				$("#divgradestatus").hide();	
+				$("#Resettt").css("visibility", "visible");			
+			}
+		}
+	});
+
+  	$("#debateinput").on("input", function() {
+    input_val = $("#debateinput").val();
+    if (input_val === "") {
+      $("#Send").prop("disabled", true);
+    } else {
+      $("#Send").prop("disabled", false);
+    }
+  });
+ 
+ getrubric(activityid, function(receivedrubrics) {
+    // Process the result here
+    if (receivedrubrics !== null) { 
+		/* for (const key in receivedrubrics) {
+    if (receivedrubrics.hasOwnProperty(key)) {
+        if (keysobjects !== '') {
+            keysobjects += ', '; // Add comma if it's not the first key
+        }
+        keysobjects += key; // Add the key to the string
+    }
+	} */
 	
+	receivedrubrics[0]['criterias'].forEach(function(item) {
+    // Retrieve the value of the 'criteria_key' field for each item
+     if (keysobjects !== '') {
+            keysobjects += ', '; // Add comma if it's not the first key
+        }
+        keysobjects += item.criteria_key;
+   
+});
+	
+	$('#keycon').append(keysobjects);  
+	globalnewrubrics = receivedrubrics;
+	callpostdata();
+		
+    } else {
+        console.error('Failed to retrieve rubrics');
+    }
+}); 
+
+      
+	
+	function callpostdata(){
+		console.log('called :', globalnewrubrics[0]['max_mark']);		
+	}
+	
+	
+  $('.bot-typing').css('display', 'block');
+
+    $("#Send").click(function() {
+	$("#Send").prop("disabled", true);
+	getbotfunc1();    
+  });	
+ 
+	function getbotfunc1(){  
+	
+	
+	$("#debateinput").val("");		
+	$(".typing").show();  
 	
 
+const max_score = globalnewrubrics[0]['max_mark'];
+
+	var data_new = {   
+    'topic': topic,
+    'course': coursefullname,
+    'student_id': input_student,
+    'activity_id': activityid,
+    'input': input_val,
+    'maximum_score': max_score,	
+    'rubric': globalnewrubrics[0]['criterias']
+	}  
+	
+	
+	 appendMessage("user", input_val);
+	
+	const chatMessagesDiv = $("#mycourses"); // Replace 'scroll' with your actual div ID
+    chatMessagesDiv.scrollTop(chatMessagesDiv[0].scrollHeight);
+	// Make the AJAX POST request
+	 	$.ajax({
+		  type: 'POST',             
+		  url: 'https://api.vf.svhs.co/api/debate-bot',  
+		  data: JSON.stringify(data_new), 
+		  contentType:'application/json',	  
+		  dataType: 'json',         // Expected data type of the response
+		  success: function(result) {   
+		$(".typing").hide(); 
+		  $("#Send").prop("disabled", true); 
+		   user_mapping(activityid,input_student);
+		  // checkuserexists1(input_student,activityid);	
+		//if( result.success == 'true') {
+
+			const aival = result.data;			
+			const argumentval = result.data['ai_response'];
+			const current_grade = result.data['estimated_grade'];
+			let predicted_score = result.data['final_score'];	
+			let aiscore = parseInt(predicted_score); 	
+			appendMessage("bot", argumentval);	
+			 $("#stopchatt").show(); 			 
+			  $("#Resettt"). show(); 		
+             $('#scoreneedle').text(aiscore);
+              var ovar = 100 - parseInt(aiscore);
+             options2.data.datasets[0].data = [aiscore, 0, ovar]; 
+
+            var ctx2 = document.getElementById('secondContainer').getContext('2d');
+            new Chart(ctx2, options2);	
+			estimatedgrade = aiscore;
+			//}	  
+				
+			},
+		  error: function(jqXHR, textStatus, errorThrown) {
+			  // Handle errors here
+			  console.error('AJAX Error:', textStatus, errorThrown);
+		  }		
+		})
+
+  }
 
 	function appendMessage(sender, message) {
-      
-      var messageElement = document.createElement("div");
-      messageElement.classList.add("mt-2");
-      if (sender === "user") {
-        messageElement.innerHTML = '<div class="user-message"> ' + message + '</div>';
-      } else {
-        messageElement.innerHTML = '<div id="bot-msg" class="bot-message message flex-item flex-item-align-left"><img src="https://latest.lms.svhs.co/reports/admin/api/chat-bot.jpg" "width=30px" height="30px" />' + message + '</div>';
-      }      
+		let mycourses = document.getElementById("mycourses");
+		var messageElement = document.createElement("div");
+		//messageElement.classList.add("mt-2");
+		 var stud_name = $("#m-firstname").val();  
+		if (sender == "user"){ 
+		 messageElement.innerHTML = '<li class="d-flex gap-3 receiver-text user"><div class="profile-circle-user"></div><p style="margin-left:20px;"><span>'+stud_name+'</span>' + message + '</p></li>';
+		} else if(sender == "bot") { 
+		  messageElement.innerHTML = '<li class="d-flex gap-3 sender-text dot"><div class="profile-circle-dot"></div><p style="margin-left:20px;"><span>Dot</span>'+ message + '</p></li>';
+		}	
+	   mycourses.appendChild(messageElement);		
+	}
+	
+	function checkuserexists1(userid,id) { 
+		//$(".typing").show(); 	
+		
+		var getinput = { "student_id": userid, "activity_id": id };
+
+
+		$.ajax({
+		  type: 'GET',   
+		  url: 'https://api.vf.svhs.co/api/debate-bot',  
+		  data: getinput, 
+		  contentType:'application/json',	  
+		  dataType: 'json',         // Expected data type of the response
+		  success: function(result) { 
+		 // if(result.message !== undefined ) { 
+			//firstchat = 1; 			
+		//input_val = 'Please ask me which position are you taking';
+		//getbotfunc1();
+			//	} 
+		 const predictedGradeDiv = document.getElementById('predictedGrade');
+		 // const currentGradeDiv = document.getElementById('currentGrade');
+		  const student_data = result.data.chat.length;
+		  if(student_data != 'null' || student_data > 1) {
+		  $("#stopchatt"). show(); 	 
+		  $("#Resettt"). show(); 	 
+		  }
+		  const airesponse = result.data.chat;
+		  const gradeval = result.data.grade; 
+			$.each(airesponse, function(index, items) { 
+			const studentinput = items.student;			
+			const argumentval = items.ai;
+			let predicted_score = gradeval.final_score;
+							 
+// need to update the score in that scale 
+ 		
+	let aiscore = parseInt(predicted_score); 
+             $('#scoreneedle').text(aiscore);
+              var ovar = 100 - parseInt(aiscore);
+             options2.data.datasets[0].data = [aiscore, 0, ovar]; 
+
+            var ctx2 = document.getElementById('secondContainer').getContext('2d');
+            new Chart(ctx2, options2);	
+		    estimatedgrade = aiscore; //console.log(estimatedgrade);	
+
+			
+			
+				//require(['https://cdn.jsdelivr.net/npm/marked@2.0.3/marked.min.js'], function (marked) {
+					// var aireply = marked(argumentval)
+					 // let studentquestion = marked(studentinput);		
+						if(studentinput != '') {
+						appendMessage("user", studentinput);
+						}
+						appendMessage("bot", argumentval);				  			
+				//	});
+				
+			});  
+				
+			},
+		  error: function(jqXHR, textStatus, errorThrown) {
+			  // Handle errors here
+			  console.error('AJAX Error:', textStatus, errorThrown);
+		  }		
+		});
+	} 
+	
+	 function letterGrade_to_digitgrade(gradeValue){
+	 var gradeDigit;
+		if(gradeValue=="A"){
+			gradeDigit = 97;
+		}else if(gradeValue=="A+"){
+			gradeDigit = 99;
+		}else if(gradeValue=="A-"){
+			gradeDigit = 90;
+		}else if(gradeValue=="B+"){
+			gradeDigit = 88;
+		}else if(gradeValue=="B"){
+			gradeDigit = 85;
+		}else if(gradeValue=="B-"){
+			gradeDigit = 81;
+		}else if(gradeValue=="C+"){
+			gradeDigit = 78;
+		}else if(gradeValue=="C"){
+			gradeDigit = 75;
+		}else if(gradeValue=="C-"){
+			gradeDigit = 71;
+		}else if(gradeValue=="D+"){
+			gradeDigit = 68;
+		}else if(gradeValue=="D"){
+			gradeDigit = 67;				  
+		}else if(gradeValue=="D-"){
+			gradeDigit = 65;
+		}else if(gradeValue=="F"){
+			gradeDigit = 60;
+		} 
+		return gradeDigit;
+	}
+	
+function digitGrade_to_lettergrade(gradeValue) {
+    if (gradeValue >= 98) {
+        return "A+";
+    } else if (gradeValue >= 90) {
+        return "A";
+    } else if (gradeValue >= 88) {
+        return "A-";
+    } else if (gradeValue >= 85) {
+        return "B+";
+    } else if (gradeValue >= 81) {
+        return "B";
+    } else if (gradeValue >= 78) {
+        return "B-";
+    } else if (gradeValue >= 75) {
+        return "C+";
+    } else if (gradeValue >= 71) {
+        return "C";
+    } else if (gradeValue >= 68) {
+        return "C-";
+    } else if (gradeValue >= 67) {
+        return "D+";
+    } else if (gradeValue >= 65) {
+        return "D";
+    } else if (gradeValue >= 60) {
+        return "D-";
+    } else {
+        return "F";
     }
-	function botReply(question) {
-      document.getElementById("userInput").placeholder = "Bot is typing..."
-      if (courseval == '') {
-        courseval = localStorage.getItem('course')
-      }
-      if (conversation == '') {
-        conversation = localStorage.getItem('conversation')
-      }
-      setTimeout(function () {
-        let userInput = question?question:document.getElementById("userInput").value
-        appendMessage("user", userInput);
-        // conversation += userInput + '';
-        const data = { 'input': userInput, 'course': courseval, 'bot_type': 'tutor' }
-        fetch('https://aiapi.svhs.co/svhs-ai/chat-bot-query/', {
-		  mode: 'no-cors',
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(data),
-        })
-          .then(response => response.json())
-          .then((result) => {
-            let button = "";
-            document.getElementById("userInput").placeholder = "Type your message here..."
-            require(['https://cdn.jsdelivr.net/npm/marked@2.0.3/marked.min.js'], function (marked) {
-              let normalText = marked(result.answer)
-              appendMessage("bot", normalText)
-              let followUpQuestions = result.follow_up_questions
-              for( var index in followUpQuestions)
-              { 
-                  var item = followUpQuestions[index]; 
-                  button += '<button id="' + item + '" style="display: block; text-align: right; background-color: #009eff; color: white; border-radius: 20px; border: None; padding: 20px;" class="follow-button" onclick="handleFollowButtonClick(\'' + item + '\')">' + item + '</button>';
-              }
-              document.getElementById("mycourses").innerHTML += button
-              // conversation += normalText + '';
-              historySaving()
-            });
-          });
+}	
 
-        document.getElementById("userInput").value = "";
+    var options1 = {
+  type: 'doughnut',
+  data: {
+    labels: ["A", "B", "C"],
+    datasets: [
+	   {
+                label: '# of Votes',
+                data: [33, 33, 33],
+                backgroundColor: [
+                    'rgba(158, 76, 93, 1)',
+					'rgba(214, 206, 134, 1)',
+                    'rgba(98, 151, 98, 1)'
+                ],
+                borderColor: [
+					'rgba(158, 76, 93, 1)',
+					'rgba(214, 206, 134, 1)',
+                    'rgba(98, 151, 98, 1)'
+                ],
+                borderWidth: 5
+            }
+		]
+  },
+  options: {
+   rotation: 1 * Math.PI,
+            circumference: 1 * Math.PI,
+            legend: {
+                display: false
+            },
+            tooltip: {
+                enabled: false
+            },
+            cutoutPercentage: 88
+  }
+}
 
-        // Automatically scroll to the last message
-        chatContent.scrollTop = chatContent.scrollHeight;
-      }, 1000);
+var ctx1 = document.getElementById('chartJSContainer').getContext('2d');
+new Chart(ctx1, options1);
+//score = 10;
+//rmscore = 30;
+let rmscore = 100 - score ;
+var options2 = {
+  type: 'doughnut',
+  data: {
+   labels: ["", "Purple", ""],   
+   // labels: ["A", "B", "C", "D"],
+            datasets: [
+               {
+				 
+				   data: [score, 0,rmscore ],
+                    backgroundColor: [
+                        "rgba(0,0,0,0)",
+                         "rgba(255,255,255,1)",
+                          "rgba(0,0,0,0)",
+                    ],
+                     borderColor: [
+                    'rgba(0, 0, 0 ,0)',
+                     'rgba(0, 0, 0, 1)',
+                    'rgba(0, 0, 0 ,0)'
+                ],
+                borderWidth: 3
+                  
+                }]
+  },
+  options: {
+    cutoutPercentage: 25,
+     rotation: 1 * Math.PI,
+      circumference: 1 * Math.PI,
+            legend: {
+                display: false
+            },
+            tooltips: {
+                enabled: false
+            }
+  }
+}
+
+
+
+var ctx2 = document.getElementById('secondContainer').getContext('2d');
+new Chart(ctx2, options2);  
+			const legend1 = document.querySelector('.legend1');
+            const legend2 = document.querySelector('.legend2');
+            const legend3 = document.querySelector('.legend3');
+            const legend4 = document.querySelector('.legend4');
+            const legend5 = document.querySelector('.legend5');
+            const percent = document.querySelector('.percent');
+            legend1.style.display = 'block';
+            legend2.style.display = 'block';
+            legend3.style.display = 'block';
+            legend4.style.display = 'block';
+            legend5.style.display = 'block';
+            percent.style.display = 'block';
+
+    
+
+
+// get rubric function 
+function getrubric(debateid, callback) { 
+    $.ajax({
+        type: 'POST',   
+        url: 'getrubrics.php', 
+        data: { debateid: debateid },
+        success: function(result) {   
+            var newrubrics = JSON.parse(result);
+            // Call the callback function with the result
+            callback(newrubrics); 	 
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            // Handle errors here
+           // console.error('AJAX Error:', textStatus, errorThrown);
+            // Call the callback function with null or an error indicator
+            callback(null);
+        }		
+    });
+}
+// call user mapping function
+  function user_mapping(aid,studid){ 
+  $.ajax({
+    url: 'user_mapping.php', 
+    data: { activity_id:aid, student_id : studid }, 
+    type: 'POST',
+    success: function(output) {
+        // Handle the response from the server (output)			
+		//console.log(output);
+        //return output;
     }
+});
+  
+}
 
+	
+// call conclusion 
+$('#stopchatt').click(function(e) {
+            e.preventDefault();
+			
+			const activity_id = $('#m-debatechatid').val();
+			const topic = $("#m-topicid").val();
+				var courseid = $("#m-courseid").val();
+			var coursename = $("#m-fullname").val();	
+			var userid = $("#m-userid").val(); 
+			 let stud_txt;
+			if(estimatedgrade > 80) { stud_txt = 'Great !'; } else {stud_txt='';}
+			//var resultdata =   getfinalgrade(activity_id,userid);  
+			let lettergrade = digitGrade_to_lettergrade(estimatedgrade);	
+			let htmlContent = '';			
+			htmlContent += '<p style="font-size: 21px; text-align: center;">'+stud_txt+' Would like to stop now with an estimated grade of '+lettergrade+'? Your teacher will finalize your grade after reviewing this chat session.'+'</p>';				
+			$('#myModal .modal-body1').html(htmlContent);
+			$('#myModal').modal('show'); // Show the modal
+		  });
+$('#getconclude').click(function(e) {
+	
+	$("#stopchatt").prop("disabled", true);
+	const stopchatt = document.querySelector('#stopchatt');
+	stopchatt.style.color = 'black';
+	stopchatt.style.backgroundColor = '#b6bec5';
+	$("#textdiv").hide(); 
+	$("#Resettt").css("visibility","hidden"); 
+	
+	$('#myModal').modal('hide'); 	
+	const activity_id = $('#m-debatechatid').val();
+				var courseid = $("#m-courseid").val();	
+			var userid = $("#m-userid").val(); 
+	
+	$.ajax({
+    type: 'POST',
+    url: 'chat_completion.php',
+    data: { activity_id:activity_id, student_id : userid,courseid : courseid },
+    success: function(response) {
+        // Request was successful
+        if(response==1) { 
+		console.log('success'); 
+		location.reload();
+		}
+    },
+		error: function(xhr, status, error) {
+        // Request failed
+        console.error('Request failed. Error: ' + error);
+		}
+	});
+});
+			
+
+  function getconclusion(aid,studid){ 
+  $.ajax({
+    url: 'getconclusion.php', 
+    data: { activity_id:aid, student_id : studid }, 
+    type: 'GET',
+    success: function(res) {
+ 		concludeval = res;
+       // console.log(concludeval);
+    }
+});
+  
+}			
+
+
+		 
+ $("#Resettt").click(function() {		
+	let htmlContent2 = '';			
+			htmlContent2 += '<p style="font-size: 21px; text-align: center;">'+'Are you sure to want to Delete this activity chat history ? It cannot be retained afterwards ! ?'+'</p>';				
+			$('#myModal2 .modal-body2').html(htmlContent2);
+			$('#myModal2').modal('show');			
+	});
+$('#getreset').click(function(e) {	
+	
+		$.ajax({
+		  type: 'DELETE',   
+		  url: 'https://api.vf.svhs.co/api/debate-bot?student_id='+input_student+'&activity_id='+activityid,  
+		  contentType:'application/json',	  
+		  dataType: 'json',         // Expected data type of the response
+		  success: function(result) { 
+		  location.reload();
+		 // input_val = 'Please ask me which position are you taking'; 
+		 // getbotfunc1();
+		  }
+		  });
+});	
+
+
+	
 });
 
-	
-
-	
-
-	
-
 {{/js}}
-<style>
-    #chatbox {
-      position: fixed;
-      bottom: 0px;
-      right: 20px;
-      width: 450px;
-      top: 10px;
-      background-color: #f1f1f1;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      overflow: hidden;
-    }
 
-
-    #chatbox .head {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      cursor: pointer;
-      background-color: #3165ae;
-      color: #fff;
-      border-top-left-radius: 5px;
-      border-top-right-radius: 5px;
-      padding: 8px 10px;
-    }
-
-    #toggleButton {
-      font-size: 18px;
-    }
-
-    #chatContent {
-      height: 100%;
-      /* Adjust this value as needed */
-      overflow-y: auto;
-      padding: 10px;
-    }
-
-    .user-input-container {
-
-      margin: 10px;
-      position: relative;
-      /* Added to make "Bot is typing..." message absolute */
-    }
-
-    #userInput {
-      width: 100%;
-      padding: 5px 10px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-    }
-
-    < !--.collapsed #userInput {
-      display: none;
-    }
-
-    -->.typing-message {
-      text-align: center;
-      font-style: italic;
-    }
-
-    .user-message {
-      float: right !important;
-      text-align: right;
-      color: #fff;
-      animation: 300ms 1 forwards slideUpAndRight cubic-bezier(0.4, 0, 0.2, 1), 300ms 1 forwards fadeIn cubic-bezier(0.4, 0, 0.2, 1);
-      background: #009eff;
-      border: none 0;
-      border-radius: 10px;
-      display: inline-block;
-      margin-bottom: 1rem;
-      outline: none;
-      padding: 0.5rem 1rem;
-      position: relative;
-      word-wrap: break-word;
-      max-width: 100%;
-      box-shadow: 1px 1px 2px 0 #d9d9d9;
-    }
-
-    .bot-message {
-      text-align: left;
-      margin-right: 100px;
-    }
-
-    .btn {
-      margin-left: 170px;
-    }
-
-    .message-list.message-list-no-input {
-      height: calc(100% - 40px);
-    }
-
-    .flex>.flex-item {
-      flex-grow: 0;
-      flex-shrink: 0;
-      flex-basis: auto;
-      min-width: initial;
-      min-width: calc(0%);
-    }
-
-    .message-list {
-      height: calc(100% - 60px);
-      overflow: hidden;
-      position: relative;
-    }
-
-    .head {
-      height: 46px;
-      border-bottom-style: solid;
-      border-bottom-width: 1px;
-      padding: 0 1rem;
-      background: linear-gradient(#eff0f9, #fcfcff);
-      border-bottom-color: #c1c0da;
-    }
-
-    .flex>.flex-item.flex-item-space-right {
-      margin-right: 1rem;
-    }
-
-    .head .img {
-      background-color: #eff0f9;
-      box-shadow: 1px 1px 2px 0 #222335;
-      background-position: center center;
-      background-repeat: no-repeat;
-      background-size: cover;
-    }
-
-    .head img,
-    .head .img {
-      border-radius: 50%;
-      height: 50px;
-      position: relative;
-      width: 50px;
-      z-index: 1;
-    }
-
-    .flex.flex-cols {
-      flex-direction: row;
-      min-height: initial;
-      min-height: calc(0%);
-    }
-
-    .truncate {
-      color: #000;
-      display: block;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .message.my-message {
-      background: #009eff;
-      color: #fff;
-    }
-
-    .button.message.clickable {
-      background: transparent;
-      border: none 0;
-      box-shadow: 0 0 0 1px #009eff;
-      color: #009eff;
-      padding-bottom: 0.375rem;
-      padding-top: 0.375rem;
-      text-align: left;
-      transition: box-shadow 200ms ease-in;
-      white-space: normal;
-      float: right;
-    }
-
-    .message.clickable {
-      cursor: pointer;
-    }
-
-    .message.message-kinda-tight {
-      margin-bottom: 0.5rem;
-    }
-
-    .message.my-message {
-      text-align: right;
-      float: right;
-      animation: 300ms 1 forwards slideUpAndRight cubic-bezier(0.4, 0, 0.2, 1), 300ms 1 forwards fadeIn cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    .message {
-      background: #fff;
-      border: none 0;
-      border-radius: 20px;
-      display: inline-block;
-      margin-bottom: 1rem;
-      outline: none;
-      padding: 0.5rem 1rem;
-      position: relative;
-      word-wrap: break-word;
-      max-width: 100%;
-      box-shadow: 1px 1px 2px 0 #d9d9d9;
-    }
-
-    .button {
-      float: right;
-      font-size: 1rem;
-      font-weight: 400;
-      height: auto;
-      border-radius 4px;
-      text-decoration: none;
-      white-space: nowrap;
-      letter-spacing: 0.02rem;
-    }
-
-    .mycoursebutton {
-      message message-kinda-tight my-message clickable flex-item flex-item-kinda-space-left
-    }
-
-    #pop {
-      position: fixed;
-      bottom: 20px;
-      right: 40px;
-      font-family: 'Source Sans Pro', sans-serif !important;
-      background-color: white;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      overflow: hidden;
-    }
-
-    #pop-img {
-      margin-top: 5%;
-    }
-
-    .material-icons {
-      margin-left: 240px;
-      margin-top: 3%;
-      margin-right: 10px;
-      color: blue;
-    }
-
-    .click-font {
-      font-size: 15px;
-      padding-left: 6px;
-      font-weight: bold;
-    }
-
-    .head img {
-      border-radius: 50%;
-      margin-right: auto;
-    }
-
-    .fa-close {
-      color: blue;
-      font-size: 35px;
-    }
-    .fa-refresh{
-      color: blue;
-      font-size: 20px;
-      margin-left: 7%;
-    }
-
-    .mck-agent-image-container .mck-agent-status-indicator {
-      position: absolute;
-      bottom: -3px;
-      right: 0;
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      border: solid 2.5px #5553b7;
-      background-color: #2bef84;
-    }
-
-    .refresh-icon {
-      width: 20px;
-      height: 20px;
-      left: 40px;
-      border: 5px solid blue;
-      border-radius: 50%;
-      position: relative;
-    }
-
-    .refresh-icon::before {
-      content: "";
-      width: 10px;
-      height: 10px;
-      border-top: 5px solid blue;
-      border-right: 5px solid blue;
-      transform: rotate(45deg);
-      position: absolute;
-      top: -7.5px;
-      right: -7.5px;
-    }
-
-    .refresh-icon:hover {
-      animation: rotate 1s linear infinite;
-    }
-
-    #bot-msg h1 {
-      font-size: 18px !important;
-    }
-
-    #bot-msg h2 {
-      font-size: 18px !important;
-    }
-
-    #bot-msg h3 {
-      font-size: 18px !important;
-    }
-    .fa-remove:before, .fa-close:before, .fa-times:before {
-    content: None !important;
-}
-    .follow-button{
-      margin-bottom: 0.5rem;
-      flex-grow: 0;
-      flex-shrink: 0;
-      flex-basis: auto;
-      min-width: initial;
-      min-width: calc(0%);
-    }
-
-.dropdown-bot {
-  position: relative;
-  display: inline-block;
-  margin-left: 20%;
-}
-
-.dropdown-content {
-  display: none;
-  position: absolute;
-  background-color: #f1f1f1;
-  min-width: 160px;
-  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-  z-index: 1;
-}
-
-.dropdown-content span {
-  color: black;
-  padding: 12px 16px;
-  text-decoration: none;
-  display: block;
-}
-.dropdown-content span:hover {background-color: #ddd;}
-
-.show {
-  display:block;
-  margin-left: -190%;
-}
-    @keyframes rotate {
-      from {
-        transform: rotate(0deg);
-      }
-
-      to {
-        transform: rotate(360deg);
-      }
-    }
-
-</style>
