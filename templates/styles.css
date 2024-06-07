@@ -1,4 +1,4 @@
-    #chatbox {
+  /*  #chatbox {
       position: fixed;
       bottom: 0px;
       right: 20px;
@@ -29,35 +29,30 @@
 
     #chatContent {
       height: 100%;
-      /* Adjust this value as needed */
       overflow-y: auto;
       padding: 10px;
-    }
+    }*/
 
-    .user-input-container {
+    .mod-debatechat .user-input-container {
 
       margin: 10px;
       position: relative;
       /* Added to make "Bot is typing..." message absolute */
     }
 
-    #userInput {
+     #m-userInput {
       width: 100%;
       padding: 5px 10px;
       border: 1px solid #ccc;
       border-radius: 5px;
     }
 
-    < !--.collapsed #userInput {
-      display: none;
-    }
-
-    -->.typing-message {
+   .mod-debatechat .typing-message {
       text-align: center;
       font-style: italic;
     }
 
-    .user-message {
+    .mod-debatechat .user-message {
       float: right !important;
       text-align: right;
       color: #fff;
@@ -75,20 +70,20 @@
       box-shadow: 1px 1px 2px 0 #d9d9d9;
     }
 
-    .bot-message {
+    .mod-debatechat .bot-message {
       text-align: left;
       margin-right: 100px;
     }
 
-    .btn {
+    .mod-debatechat .btn {
       margin-left: 170px;
     }
 
-    .message-list.message-list-no-input {
+    .mod-debatechat .message-list.message-list-no-input {
       height: calc(100% - 40px);
     }
 
-    .flex>.flex-item {
+    .mod-debatechat .flex>.flex-item {
       flex-grow: 0;
       flex-shrink: 0;
       flex-basis: auto;
@@ -96,13 +91,13 @@
       min-width: calc(0%);
     }
 
-    .message-list {
+    .mod-debatechat .message-list {
       height: calc(100% - 60px);
       overflow: hidden;
       position: relative;
     }
 
-    .head {
+    .mod-debatechat .head {
       height: 46px;
       border-bottom-style: solid;
       border-bottom-width: 1px;
@@ -111,11 +106,11 @@
       border-bottom-color: #c1c0da;
     }
 
-    .flex>.flex-item.flex-item-space-right {
+    .mod-debatechat .flex>.flex-item.flex-item-space-right {
       margin-right: 1rem;
     }
 
-    .head .img {
+    .mod-debatechat .head .img {
       background-color: #eff0f9;
       box-shadow: 1px 1px 2px 0 #222335;
       background-position: center center;
@@ -123,7 +118,7 @@
       background-size: cover;
     }
 
-    .head img,
+    .mod-debatechat .head img,
     .head .img {
       border-radius: 50%;
       height: 50px;
@@ -132,13 +127,13 @@
       z-index: 1;
     }
 
-    .flex.flex-cols {
+    .mod-debatechat .flex.flex-cols {
       flex-direction: row;
       min-height: initial;
       min-height: calc(0%);
     }
 
-    .truncate {
+    .mod-debatechat .truncate {
       color: #000;
       display: block;
       white-space: nowrap;
@@ -146,12 +141,12 @@
       text-overflow: ellipsis;
     }
 
-    .message.my-message {
+    .mod-debatechat .message.my-message {
       background: #009eff;
       color: #fff;
     }
 
-    .button.message.clickable {
+    .mod-debatechat .button.message.clickable {
       background: transparent;
       border: none 0;
       box-shadow: 0 0 0 1px #009eff;
@@ -164,21 +159,21 @@
       float: right;
     }
 
-    .message.clickable {
+    .mod-debatechat .message.clickable {
       cursor: pointer;
     }
 
-    .message.message-kinda-tight {
+    .mod-debatechat .message.message-kinda-tight {
       margin-bottom: 0.5rem;
     }
 
-    .message.my-message {
+    .mod-debatechat .message.my-message {
       text-align: right;
       float: right;
       animation: 300ms 1 forwards slideUpAndRight cubic-bezier(0.4, 0, 0.2, 1), 300ms 1 forwards fadeIn cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    .message {
+   .mod-debatechat .message {
       background: #fff;
       border: none 0;
       border-radius: 20px;
@@ -192,7 +187,7 @@
       box-shadow: 1px 1px 2px 0 #d9d9d9;
     }
 
-    .button {
+    .mod-debatechat .button {
       float: right;
       font-size: 1rem;
       font-weight: 400;
@@ -203,9 +198,9 @@
       letter-spacing: 0.02rem;
     }
 
-    .mycoursebutton {
+    /*.mod-debatechat .mycoursebutton {
       message message-kinda-tight my-message clickable flex-item flex-item-kinda-space-left
-    }
+    }*/
 
     #pop {
       position: fixed;

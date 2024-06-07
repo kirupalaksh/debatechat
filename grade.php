@@ -16,3 +16,4 @@ $userid = optional_param('userid', 0, PARAM_INT); // Graded user ID (optional).
 
 // In the simplest case just redirect to the view page.
 redirect('view.php?id='.$id);
+//redirect('debategrade.php?id='.$id);

@@ -29,14 +29,12 @@ defined('MOODLE_INTERNAL') || die();
 function debatechat_supports($feature) {
 
     switch($feature) {
-        case FEATURE_MOD_INTRO:
-            return true;
-        case FEATURE_SHOW_DESCRIPTION:
-            return true;
-        case FEATURE_GRADE_HAS_GRADE:
-            return false;
-        case FEATURE_BACKUP_MOODLE2:
-            return true;
+        case FEATURE_MOD_INTRO:     return true;
+        case FEATURE_SHOW_DESCRIPTION:  return true;
+        case FEATURE_GRADE_HAS_GRADE:    return true;
+		case FEATURE_GRADE_OUTCOMES:   return true;
+        case FEATURE_BACKUP_MOODLE2:      return true;
+		case FEATURE_ADVANCED_GRADING:        return true;
         default:
             return null;
     }
@@ -56,12 +54,52 @@ function debatechat_supports($feature) {
  */
 function debatechat_add_instance(stdClass $debatechat, mod_debatechat_mod_form $mform = null) {
     global $DB;
-
+//print_r($debatechat); die;
     $debatechat->timecreated = time();
-    $debatechat->id = $DB->insert_record('debatechat', $debatechat);
-
-    return $debatechat->id;
+    //$debatechat->grade_rescalegrades;
+	if($debatechat->advancedgradingmethod_debatechat == 'rubric' ){
+	 $debatechat->scale = 100;	
+	 $debatechat->grade_debatechat = 100;		 
+	}
+	//var_dump($debatechat);exit;
+   $debatechat->id = $DB->insert_record('debatechat', $debatechat);
+	
+     return $debatechat->id;
 }
+
+/**
+     * Lookup this user id and return the unique id for this debatechat.
+     *
+     * @param int $debatechatid The debatechat id
+     * @param int $userid The userid to lookup
+     * @return int The unique id
+     */
+ function get_uniqueid_for_user_static($debatechatid, $userid) {
+        global $DB;
+
+        // Search for a record.
+        $params = array('debatechat'=>$debatechatid, 'userid'=>$userid);
+        if ($record = $DB->get_record('debatechat_user_mapping', $params, 'id')) {
+            return $record->id;
+        }
+
+        // Be a little smart about this - there is no record for the current user.
+        // We should ensure any unallocated ids for the current participant
+        // list are distrubited randomly.
+      //  self::allocate_unique_ids($debatechatid);
+
+        // Retry the search for a record.
+        if ($record = $DB->get_record('debatechat_user_mapping', $params, 'id')) {
+            return $record->id;
+        }
+
+        // The requested user must not be a participant. Add a record anyway.
+        $record = new stdClass();
+        $record->debatechat = $debatechatid;
+        $record->userid = $userid;
+
+        return $DB->insert_record('debatechat_user_mapping', $record);
+    }
 
 /**
  * Updates an instance of the debatechat in the database
@@ -79,8 +117,8 @@ function debatechat_update_instance(stdClass $debatechat, mod_debatechat_mod_for
 
     $debatechat->timemodified = time();
     $debatechat->id = $debatechat->instance;
-
-    $result = $DB->update_record('debatechat', $debatechat);
+	
+   $result = $DB->update_record('debatechat', $debatechat);
 
     return $result;
 }
@@ -173,6 +211,7 @@ function debatechat_user_outline($course, $user, $mod, $debatechat) {
  * @param stdClass $debatechat the module instance record
  */
 function debatechat_user_complete($course, $user, $mod, $debatechat) {
+	return true;
 }
 
 /**
@@ -273,14 +312,42 @@ function debatechat_scale_used($debatechatid, $scaleid) {
  * @param int $scaleid ID of the scale
  * @return boolean true if the scale is used by any debatechat instance
  */
-function debatechat_scale_used_anywhere($scaleid) {
+/* function debatechat_scale_used_anywhere($scaleid) {
     global $DB;
     if ($scaleid and $DB->record_exists('debatechat', array('grade' => -$scaleid))) {
         return true;
     } else {
         return false;
     }
+} */
+function debatechat_scale_used_anywhere(int $scaleid): bool {
+    global $DB;
+
+    if (empty($scaleid)) {
+        return false;
+    }
+
+    return $DB->record_exists_select('debatechat', "scale = ?", [$scaleid * -1]);
 }
+/**
+ * Return grade for given user or all users.
+ *
+ * @param stdClass $assign record of assign with an additional cmidnumber
+ * @param int $userid optional user id, 0 means all users
+ * @return array array of grades, false if none
+ */
+function debatechat_get_user_grades($debatechat, $userid=0) {
+    global $CFG,$DB;
+
+    require_once($CFG->dirroot . '/mod/debatechat/locallib.php');
+
+    $cm = get_coursemodule_from_instance('assign', $debatechat->id, 0, false, MUST_EXIST);
+    $context = context_module::instance($cm->id);
+    $debatechat = new debatechat($context, null, null);
+    $debatechat->set_instance($assign);
+    return $debatechat->get_user_grades_for_gradebook($userid);
+}
+ 
 /**
  * Creates or updates grade item for the given debatechat instance
  *
@@ -290,10 +357,12 @@ function debatechat_scale_used_anywhere($scaleid) {
  * @param bool $reset reset grades in the gradebook
  * @return void
  */
-function debatechat_grade_item_update(stdClass $debatechat, $reset=false) {
+ 
+ 
+function debatechat_grade_item_update(stdClass $debatechat, $debatechatgrades) { //print_r($debatechat); die;
     global $CFG;
     require_once($CFG->libdir.'/gradelib.php');
-    $item = array();
+   /*  $item = array();
     $item['itemname'] = clean_param($debatechat->name, PARAM_NOTAGS);
     $item['gradetype'] = GRADE_TYPE_VALUE;
     if ($debatechat->grade > 0) {
@@ -311,6 +380,30 @@ function debatechat_grade_item_update(stdClass $debatechat, $reset=false) {
     }
     grade_update('mod/debatechat', $debatechat->course, 'mod', 'debatechat',
             $debatechat->id, 0, null, $item);
+	 */		
+     // Whole debatechat grade.
+    $item = [
+        'itemname' => get_string('gradeitemnameforwholedebatechat', 'debatechat', $debatechat),
+        'idnumber' => $debatechat->id
+    ];
+
+    if (!$debatechat->grade_debatechat) {
+        $item['gradetype'] = GRADE_TYPE_NONE;
+    } else if ($debatechat->grade_debatechat > 0) {
+        $item['gradetype'] = GRADE_TYPE_VALUE;
+        $item['grademax'] = $debatechat->grade_debatechat;
+        $item['grademin'] = 0;
+    } else if ($debatechat->grade_debatechat < 0) {
+        $item['gradetype'] = GRADE_TYPE_SCALE;
+        $item['scaleid'] = $debatechat->grade_debatechat * -1;
+    }
+
+    if ($debatechatgrades === 'reset') {
+        $item['reset'] = true;
+        $debatechatgrades = null;
+    }
+    // Itemnumber 1 is the whole debatechat grade.
+    grade_update('mod/debatechat', $debatechat->course, 'mod', 'debatechat', $debatechat->id, 1, $debatechatgrades, $item); 
 }
 /**
  * Delete grade item for given debatechat instance
@@ -336,8 +429,25 @@ function debatechat_update_grades(stdClass $debatechat, $userid = 0) {
     global $CFG, $DB;
     require_once($CFG->libdir.'/gradelib.php');
     // Populate array of grade objects indexed by userid.
-    $grades = array();
-    grade_update('mod/debatechat', $debatechat->course, 'mod', 'debatechat', $debatechat->id, 0, $grades);
+   // $grades = array();
+   // grade_update('mod/debatechat', $debatechat->course, 'mod', 'debatechat', $debatechat->id, 0, $grades);
+	
+
+    if ($debatechat->grade == 0) {
+        debatechat_grade_item_update($debatechat);
+
+    } else if ($grades = debatechat_get_user_grades($debatechat, $userid)) {
+        foreach ($grades as $k => $v) {
+            if ($v->rawgrade == -1) {
+                $grades[$k]->rawgrade = null;
+            }
+        }
+        debatechat_grade_item_update($debatechat, $grades);
+
+    } else {
+        debatechat_grade_item_update($debatechat);
+    }
+	
 }
 
 /* File API */
@@ -432,3 +542,24 @@ function debatechat_extend_navigation(navigation_node $navref, stdClass $course,
 function debatechat_extend_settings_navigation(settings_navigation $settingsnav, navigation_node $debatechatnode=null) {
     // TODO Delete this function and its docblock, or implement it.
 }
+ /**
+     * The id used to uniquily identify the cache for this instance of the assign object.
+     *
+     * @return string
+     */
+     function get_useridlist_key_id() {
+        return $this->useridlistid;
+    }
+
+    /**
+     * Generates the key that should be used for an entry in the useridlist cache.
+     *
+     * @param string $id Generate a key for this instance (optional)
+     * @return string The key for the id, or new entry if no $id is passed.
+     */
+    function get_useridlist_key($id = null) {
+        if ($id === null) {
+            $id = $this->get_useridlist_key_id();
+        }
+        return $this->get_course_module()->id . '_' . $id;
+    }
